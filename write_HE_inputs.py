@@ -5,7 +5,7 @@ Created on Wed May  4 14:20:39 2022
 
 @author: jakravit
 """
-from ver3.build_case2 import build_case2
+from build_Case1 import build_Case1
 import numpy as np
 from scipy.interpolate import interp1d
 import pickle
@@ -55,9 +55,17 @@ adj_lib = pd.read_csv(datadir+'adjacency_spectra_V2.csv')
 aero_lib = pd.read_csv(datadir+'aeronet_invdata_match.csv')
 
 #%%
-INFO = True
+INFO = False
 
-iops, cols, row = build_case2(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib)
+rows = []
+for k in range(1):
+    iops, cols, row = build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib)
+    rows.append(row)
+
+
+sims = pd.DataFrame(rows,columns=cols)
+
+
 if INFO:
     print ('Chla: {} ug/L'.format(iops['Phyto']['TotChl']))
     print ('Minl: {} g/L'.format(iops['Min']['Tot_conc']))
@@ -65,67 +73,85 @@ if INFO:
     print ('Max Depth: {} m'.format(iops['Depth']['Dmax']))
     
     
-#%
+#%%
 #% TOTAL IOPS
 
 # pre - assign
-a_tot=[]; a_totphy=[]; a_totmin=[]; a_totdet=[]; a_totdom=[]
-c_tot=[]; c_totphy=[]; c_totmin=[]; c_totdet=[]; c_totdom=[]
-bb_tot=[]; bb_totphy=[]; bb_totmin=[]; bb_totdet=[]; bb_totdom=[]
-chlProfile = []
+# a_tot=[]; a_totphy=[]; a_totmin=[]; a_totdet=[]; a_totdom=[]
+# c_tot=[]; c_totphy=[]; c_totmin=[]; c_totdet=[]; c_totdom=[]
+# bb_tot=[]; bb_totphy=[]; bb_totmin=[]; bb_totdet=[]; bb_totdom=[]
+# chlProfile = []
 
 # depth
-depth = np.array([0,1,2,3,4,5,6,7,8,9])
+depth = iops['Depth']['Depth']
 depth = depth.reshape(-1, 1)
+xfactor = iops['Depth']['xfactor']
+dlen = len(depth)
 
 # chl profile
-chlProfile.append([iops['Phyto']['TotChl']] * 10)
+chlProfile = [iops['Phyto']['TotChl'] * x for x in xfactor]
+# chlProfile.append([iops['Phyto']['TotChl']] * dlen)
+# chlProfile.append(cp)
 chlProfile = np.asarray(chlProfile).reshape(-1, 1)
 foot = np.hstack((-1,0))
 chlzProfile = np.hstack((depth,chlProfile))
 chlzProfile = np.vstack((chlzProfile,foot))
 
-for i in range(10):
+# for i in range(dlen):
 
-    # absorption
-    atotphy = iops['Phyto']['a_tot']
-    atotmin = iops['Min']['a_tot']
-    atotdet = iops['Det']['a_tot']
-    atotdom = iops['CDOM']['a_tot'][63:]
-    atot = atotphy + atotmin + atotdet + atotdom
-    a_tot.append(atot)
-    a_totphy.append(atotphy)
-    a_totmin.append(atotmin)
-    a_totdet.append(atotdet)
-    a_totdom.append(atotdom)
-    
-    # Scatter
-    btotphy = iops['Phyto']['b_tot']
-    btotmin = iops['Min']['b_tot']
-    btotdet = iops['Det']['b_tot']
-    btot = btotphy + btotmin + btotdet
-    
-    # attenuation
-    ctotphy = atotphy + btotphy
-    ctotmin = atotmin + btotmin
-    ctotdet = atotdet + btotdet
-    ctotdom = atotdom # no scattering
-    ctot = atot + btot
-    c_tot.append(ctot)
-    c_totphy.append(ctotphy)
-    c_totmin.append(ctotmin)
-    c_totdet.append(ctotdet)
-    c_totdom.append(ctotdom)
+# absorption
+atotphy = iops['Phyto']['a_tot']
+atotmin = iops['Min']['a_tot']
+atotdet = iops['Det']['a_tot']
+atotdom = iops['CDOM']['a_tot'][63:]
+atot = atotphy + atotmin + atotdet + atotdom
+a_tot = [atot * x for x in xfactor]
+a_totphy = [atotphy * x for x in xfactor]
+a_totmin = [atotmin * x for x in xfactor]
+a_totdet = [atotdet * x for x in xfactor]
+a_totdom = [atotdom * x for x in xfactor]
+# a_tot.append(atot)
+# a_totphy.append(atotphy)
+# a_totmin.append(atotmin)
+# a_totdet.append(atotdet)
+# a_totdom.append(atotdom)
 
-    # backscattering
-    bbtotphy = iops['Phyto']['bb_tot']
-    bbtotmin = iops['Min']['bb_tot']
-    bbtotdet = iops['Det']['bb_tot']
-    bbtot = bbtotphy + bbtotmin + bbtotdet
-    bb_tot.append(bbtot)
-    bb_totphy.append(bbtotphy)
-    bb_totmin.append(bbtotmin)
-    bb_totdet.append(bbtotdet)
+# Scatter
+btotphy = iops['Phyto']['b_tot']
+btotmin = iops['Min']['b_tot']
+btotdet = iops['Det']['b_tot']
+btot = btotphy + btotmin + btotdet
+
+# attenuation
+ctotphy = atotphy + btotphy
+ctotmin = atotmin + btotmin
+ctotdet = atotdet + btotdet
+ctotdom = atotdom # no scattering
+ctot = atot + btot
+c_tot = [atot * x for x in xfactor]
+c_totphy = [ctotphy * x for x in xfactor]
+c_totmin = [ctotmin * x for x in xfactor]
+c_totdet = [ctotdet * x for x in xfactor]
+c_totdom = [ctotdom * x for x in xfactor]
+# c_tot.append(ctot)
+# c_totphy.append(ctotphy)
+# c_totmin.append(ctotmin)
+# c_totdet.append(ctotdet)
+# c_totdom.append(ctotdom)
+
+# backscattering
+bbtotphy = iops['Phyto']['bb_tot']
+bbtotmin = iops['Min']['bb_tot']
+bbtotdet = iops['Det']['bb_tot']
+bbtot = bbtotphy + bbtotmin + bbtotdet
+bb_tot = [atot * x for x in xfactor]
+bb_totphy = [bbtotphy * x for x in xfactor]
+bb_totmin = [bbtotmin * x for x in xfactor]
+bb_totdet = [bbtotdet * x for x in xfactor]
+# bb_tot.append(bbtot)
+# bb_totphy.append(bbtotphy)
+# bb_totmin.append(bbtotmin)
+# bb_totdet.append(bbtotdet)
 
 #% PREPARE FOR WRITING TO .TXT FILE IN HYDROLIGHT FORMAT
 
@@ -233,7 +259,8 @@ for fname in fnames:
         np.savetxt(f,line11,fmt='%d',delimiter='\t')
         np.savetxt(f,fnames[fname]['bbdata'],delimiter='\t')
 
-#% PLOT IOPS
+
+#%% PLOT IOPS
 import matplotlib.pyplot as plt
 
 for k in ['a','bb']:

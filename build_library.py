@@ -239,13 +239,13 @@ def phyto_iops_case1 (phyto_class_frxn, phy_library, classIOPs):
         classIOPs[c]['class_Deff'] = cl_sz
         if cl_sz <= 2:
             cl_sz_cl = 'pico'
-        elif 3 < cl_sz <= 6:
+        elif 2.01 < cl_sz <= 6:
             cl_sz_cl = 'small_nano'
-        elif 7 < cl_sz <= 11:
+        elif 6.01 < cl_sz <= 11:
             cl_sz_cl = 'med_nano'
-        elif 12 < cl_sz <= 20:
+        elif 11.01 < cl_sz <= 20:
             cl_sz_cl = 'large_nano'
-        elif cl_sz > 21:
+        elif cl_sz > 20.01:
             cl_sz_cl = 'micro'
         classIOPs[c]['class_sz_class'] = cl_sz_cl             
             

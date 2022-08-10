@@ -111,29 +111,29 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     
     ################### DEPTH FUNCTION #############################################
     #%
-    depth = np.random.choice(np.arange(1,21,1)) * -1
+    depth = np.random.choice(np.arange(1,31,1))
     s1 = np.arange(.005, .1, .005)
     s2 = np.arange(.1,.6,.05)
     s3 = np.arange(.6,1,.1)
     s = np.concatenate([s1,s2,s3])
     slope = np.random.choice(s)
     c = 30 # hypothetical (doesnt matter for xfactor)
-    d = np.arange(0,depth,-.5)
+    d = np.arange(0,depth,1)
     yfactor = []
     xfactor = []
     for k in d:
-        y = c * np.exp(-slope*-k)
+        y = c * np.exp(-slope*-(k*-1))
         x = y/c
         yfactor.append(y)
         if k == 0:
-            xfactor.append(0)
+            xfactor.append(1)
         else:
             xfactor.append(x)
     
     dprops = {'Depth':d,
               'xfactor':xfactor,
               'slope':slope,
-              'Dmax':d.min()*-1}
+              'Dmax':d.max()}
     iops['Depth'] = dprops
     
     ##################### Benthic Reflectance #######################################
