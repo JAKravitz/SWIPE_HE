@@ -35,9 +35,10 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     #################### PHYTOPLANKTON ############################################## 
     
     # assign class contributions
-    alphas = [.5, 1, 5, 10]
-    groups = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes',
-              'Green_algae','Cyano_blue','Heterokonts','Cyano_red','Rhodophytes']
+    alphas = [.5, 1, 4]
+    # groups = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes',
+    #           'Green_algae','Cyano_blue','Heterokonts','Cyano_red','Rhodophytes',
+    #          'Eustigmatophyte', 'Raphidophyte']
     phyto_class_frxn, maxpft = dirichlet_phyto(alphas)
     
     # define species for each class first
@@ -168,8 +169,10 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
                                           'desert',
                                           'maritime_clean', 'maritime_polluted',
                                           'maritime_tropical', 'urban']),
-            'VZA': np.random.choice(range(10,50)),
-            'VAA': np.random.choice(range(60,120)),
+            'OZA': np.random.choice(range(10,55,5)),
+            'OAA': np.random.choice(range(60,120,5)),
+            'SZA': np.random.choice(range(5,70,5)),
+            'SAA': np.random.choice(range(30,65,5)),
             'wind': np.random.choice(np.linspace(0,14,29))
            }
     
