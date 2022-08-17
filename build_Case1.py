@@ -12,7 +12,7 @@ import numpy as np
 import pickle
 import random
 
-def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
+def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     
     # lambda
     l = np.arange(400, 902.5, 2.5)  
@@ -54,7 +54,7 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
                 f['fx'].append(1-fx)
     
     # define chl distribution and get chl conc
-    sigma,scale = lognorm_params(.3,.3)
+    sigma,scale = lognorm_params(.5,.5)
     chlDist = lognorm_random(sigma, scale, 20000)
     chl = round(np.random.choice(chlDist), 3)
     
@@ -68,8 +68,10 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     ####################### NON ALGAL PARTICLES ####################################
     #%
     # MINERALS
+    classes = ['SAN1','AUS1','ICE1','KUW1','NIG1','SAH1','OAH1']
     idx440 = int(np.where(l==440)[0])
-    run_mins = random.choices(list(datamin.keys()), k=2) # allows repeats
+    # run_mins = random.choices(list(datanap.keys()), k=2) # allows repeats
+    run_mins = random.choices(classes, k=2)
     fx = np.random.choice(frxns)
     min_frxn = {run_mins[0]+'1': fx,
                 run_mins[1]+'2': 1-fx}
@@ -87,7 +89,7 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     # mineral component
     minIOPs = {}
     minIOPs['amin440'] = amin440
-    minIOPs = min_iops_case1(min_frxn, datamin, minIOPs)    
+    minIOPs = min_iops_case1(min_frxn, datanap, minIOPs)    
     iops['Min'] = minIOPs 
     
     # DETRITUS
@@ -95,7 +97,7 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     detIOPs = {}
     adet440 = anap440 * (1-sf)
     detIOPs['adet440'] = adet440
-    detIOPs = det_iops_case1(datadet, detIOPs)
+    detIOPs = det_iops_case1(datanap, detIOPs)
     iops['Det'] = detIOPs
         
     #%
