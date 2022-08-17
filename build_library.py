@@ -349,13 +349,19 @@ def phyto_iops_case2 (phyto_class_frxn, phy_library, classIOPs):
     return classIOPs
 
 ##
-def min_iops_case1 (min_frxn, datamin, minIOPs):
+def min_iops_case1 (min_frxn, datanap, minIOPs):
     l = np.arange(400, 902.5, 2.5)
     idx700 = int(np.where(l==700)[0])
     idx440 = int(np.where(l==440)[0])
     for c, f in min_frxn.items():
+        if c == 'DET':
+            continue
         minIOPs[c] = {}
-        sims = datamin[c[:-1]]
+        sims = datanap[c[:-1]]
+        try:
+            del sims['time']
+        except:
+            pass
         sim_idx = np.random.choice(list(sims.keys()))
         info = sims[sim_idx]
         cminl = (minIOPs['amin440'] * f) / info['astar'][0][idx440]
@@ -368,7 +374,7 @@ def min_iops_case1 (min_frxn, datamin, minIOPs):
         minIOPs[c]['bb'] = cminl * info['bbstar'][0]
         minIOPs[c]['VSF'] = cminl * info['VSF'][0]
         minIOPs[c]['class_slope'] = np.polyfit(l[:idx700], np.log(astar[:idx700]),1)[0]
-        for kk in ['j','nreal','rho']:
+        for kk in ['jexp','nreal','rho']:
             minIOPs[c][kk] = info[kk]
         minIOPs[c]['psdmax'] = info['dmax']
 
@@ -422,12 +428,17 @@ def min_iops_case2 (min_frxn, datamin, minIOPs):
     return minIOPs
 
 ##
-def det_iops_case1 (datadet, detIOPs):
+def det_iops_case1 (datanap, detIOPs):
     l = np.arange(400, 902.5, 2.5)
     idx440 = int(np.where(l==440)[0])
     idx700 = int(np.where(l==700)[0])
-    sim_idx = np.random.choice(list(datadet.keys()))
-    info = datadet[sim_idx]
+    sims = list(datanap['DET'].keys())
+    try:
+        del sims['time']
+    except:
+        pass
+    sim_idx = np.random.choice(sims)
+    info = datanap['DET'][sim_idx]
     astar = info['astar'][0]
     cdet = detIOPs['adet440'] / info['astar'][0][idx440]
     detIOPs['Tot_conc'] = cdet
@@ -436,7 +447,7 @@ def det_iops_case1 (datadet, detIOPs):
     detIOPs['bb_tot'] = cdet * info['bbstar'][0]
     detIOPs['VSF_tot'] = cdet * info['VSF'][0]
     detIOPs['Tot_slope'] = np.polyfit(l[:idx700], np.log(astar[:idx700]),1)[0]       
-    for kk in ['j','nreal','rho']:
+    for kk in ['jexp','nreal','rho']:
         detIOPs[kk] = info[kk]
     detIOPs['psdmax'] = info['dmax']   
     return detIOPs
