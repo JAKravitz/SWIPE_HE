@@ -54,7 +54,7 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
                 f['fx'].append(1-fx)
     
     # define chl distribution and get chl conc
-    sigma,scale = lognorm_params(.05,.15)
+    sigma,scale = lognorm_params(.3,.3)
     chlDist = lognorm_random(sigma, scale, 20000)
     chl = round(np.random.choice(chlDist), 3)
     
@@ -112,7 +112,7 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     
     ################### DEPTH FUNCTION #############################################
     #%
-    depth = np.random.choice(np.arange(1,31,1))
+    depth = np.random.choice(np.arange(10,31,1))
     s1 = np.arange(.005, .1, .005)
     s2 = np.arange(.1,.6,.05)
     s3 = np.arange(.6,1,.1)

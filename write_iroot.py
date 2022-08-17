@@ -9,13 +9,14 @@ def iroot(l, iops, batch_name, uid, rootPath):
     import io
     
     # filepaths
-    runlist_title = batch_name + '_runlist.txt'
-    # datapath = '/Users/jakravit/data/hydro/rmfrocm50n/'
     runPath = rootPath + 'HE60/run/'
     batchPath = runPath + 'batch/'
-    
+    runlist_title = batch_name + '_runlist.txt'
+    batchlist_title = 'batchruns.sh'
+
     # solar zenith
-    theta = iops['Atm']['SZA']
+    sza = iops['Atm']['SZA']
+    saa = iops['Atm']['SAA']
     
     # wind speed (m/s)
     ws = iops['Atm']['wind']
@@ -26,6 +27,7 @@ def iroot(l, iops, batch_name, uid, rootPath):
         
     # create .txt filename
     # fname0 = datapath.split('/')[5]
+    fname0 = 'I_' + batch_name +'_' + uid
     fname = 'I_' + batch_name +'_' + uid + '.txt'
     fpath = batchPath + fname
 
@@ -36,10 +38,10 @@ def iroot(l, iops, batch_name, uid, rootPath):
     line1 = np.array([0, 400, 700, .01, 488, 0.00026, 1, 5.3]).reshape(1, -1)
 
     # LINE 2 - RECORD 2: RUN TITLE
-    line2 = 'theta_{}_wind_{}\n'.format(theta,ws)
+    line2 = 'sza_{}_saa_{}_wind_{}\n'.format(sza,saa,ws)
 
     # LINE 3 - RECORD 3: ROOTNAME
-    line3 = fname + '\n'
+    line3 = fname0 + '\n'
 
     # LINE 4 - RECORD 4A: OUTPUT OPTIONS
     line4 = np.array([0, 0, 0, 1, 0]).reshape(1, -1)
@@ -56,10 +58,10 @@ def iroot(l, iops, batch_name, uid, rootPath):
     # LINE 8-11 - RECORD 5C: SPECIFIC ABSORPTION PARAMETERS
     # fluorescence off
     line8_11 = np.array([[0, 1, 440, 1, 0.014],  # water
-                         [2, -666, 440, 0.1, 0.014]]).reshape(2, -1)  # total
+                         [2, -666, 440, 1, 0.014]]).reshape(2, -1)  # total
 
     # LINE 12-15 - RECORD 5D: SPECIFIC ABSORPTION DATA FILE NAMES
-    line12_15 = '\n'.join(['../data/H2OabDefaults_FRESHwater.txt',
+    line12_15 = '\n'.join(['/nex/modules/m/hydrolight/HE60/data/H2OabDefaults_FRESHwater.txt',
                            'dummyastar.txt\n'])
 
     # LINE 16-17 - RECORD 5E: SPECIFIC SCATTERING PARAMTERS
@@ -75,19 +77,19 @@ def iroot(l, iops, batch_name, uid, rootPath):
     line21 = np.array([-2, 0, 550, 0.01, 0]).reshape(1, -1)
 
     # LINE 22-23 - RECORD 5H: PHASE FUNCITON FILE NAMES
-    line22_23 = '\n'.join(['dpf_pure_H20.txt',
+    line22_23 = '\n'.join(['dpf_pure_H2O.txt',
                            'dpf_Petzold_avg_particle.txt\n'])
 
     # LINE 24-75 - RECORD 6: WAVELENGTHS
     # 400:900 in 2.5 nm intervals = 200 'bands'
     line24 = np.array([201]).reshape(1, -1)
-    line25_73 = np.arange(398.75, 901.25, 2.5).reshape(1, -1)
+    line25_73 = np.arange(398.75, 903.75, 2.5).reshape(1, -1)
     # line75 = np.array([900]).reshape(1, -1)
 
     # LINE 76 - RECORD 7: INELASTIC SCATTERING
     # AND LINE 77 - RECORD 8: SKY MODEL
     line76_77 = np.array([[0,0,0,0,0],
-                          [2,3,theta,0,0]]).reshape(2,-1)
+                          [2,3,sza,saa,0]]).reshape(2,-1)
 
     # REST OF LINES DO NOT NEED ATTENTION AND CAN STAY THE SAME
     # UNLESS YOU WANT TO CHANGE ATMOSPHERICS, DEPTHS, PATHS TO IOPS, ETC..
@@ -99,18 +101,18 @@ def iroot(l, iops, batch_name, uid, rootPath):
     line81 = np.array(d2).reshape(1,-1) # depths
 
     # REST OF LINES ARE DATA FILE PATHS (82-93)...
-    line82_93 = '\n'.join(['../data/H2OabDefaults_FRESHwater.txt',
+    line82_93 = '\n'.join(['/nex/modules/m/hydrolight/HE60/data/H2OabDefaults_FRESHwater.txt',
                            '1',
-                           '{}HE60/iop_profiles/{}/acDatatot_{}.txt'.format(rootPath,batch_name,uid),
+                           '{}HE60/iop_profiles/{}/{}/acDatatot_{}.txt'.format(rootPath,batch_name,uid,uid),
                            'dummyFilteredAc9.txt',
-                           '{}HE60/iop_profiles/{}/bbDatatot_{}.txt'.format(rootPath,batch_name,uid),
+                           '{}HE60/iop_profiles/{}/{}/bbDatatot_{}.txt'.format(rootPath,batch_name,uid,uid),
                            'dummyCHLdata.txt',
                            'dummyCDOMdata.txt',
                            'dummyR.bot',
-                           'dummydata.txt',
+                           'dummyComp.txt',
                            'dummyComp.txt',
                            'DummyIrrad.txt',
-                           '../data/examples/So_biolum_user_data.txt',
+                           '/nex/modules/m/hydrolight/HE60/data/examples/So_biolum_user_data.txt',
                            'DummyRad.txt'])   
 
     #
@@ -124,15 +126,15 @@ def iroot(l, iops, batch_name, uid, rootPath):
         np.savetxt(f, line5, delimiter=',', fmt='%d')
         np.savetxt(f, line6, delimiter=',', fmt='%d')
         np.savetxt(f, line7, delimiter=',', fmt='%d')
-        np.savetxt(f, line8_11, fmt='%d,%d,%d,%1.1f,%1.3f')
+        np.savetxt(f, line8_11, fmt='%d,%d,%d,%d,%1.3f')
         f.writelines(line12_15)
         np.savetxt(f, line16_17, delimiter=',', fmt='%d')
         f.writelines(line18_19)
         np.savetxt(f, line20, fmt='%d,%d,%d,%1.2f,%d')
-        np.savetxt(f, line21, delimiter=',', fmt='%d')
+        np.savetxt(f, line21, fmt='%d,%d,%d,%1.2f,%d')
         f.writelines(line22_23)
         np.savetxt(f, line24, fmt='%d')
-        np.savetxt(f, line25_73, delimiter=',', fmt='%1.1f')
+        np.savetxt(f, line25_73, delimiter=',', fmt='%1.2f')
         #np.savetxt(f, line74, delimiter=',', fmt='%d')
         # np.savetxt(f, line75, fmt='%d')
         np.savetxt(f, line76_77, delimiter=',', fmt='%d')
@@ -145,3 +147,7 @@ def iroot(l, iops, batch_name, uid, rootPath):
         # WRITE FILE TO RUNLIST.TXT FOR HE5 BATCH PROCESSING
         with io.open(runPath + runlist_title, 'a+') as r:
             r.write(str(fname) + '\r\n')
+            
+        # WRITE FILE TO batchlist.sh FOR HE5 BATCH PROCESSING
+        with io.open(runPath + batchlist_title, 'a+') as fp:
+            fp.write('/nex/modules/m/hydrolight/HE60/backend/./EcoLight6 < ../run/batch/{}\n'.format(fname))            
