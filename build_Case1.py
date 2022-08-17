@@ -35,9 +35,10 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     #################### PHYTOPLANKTON ############################################## 
     
     # assign class contributions
-    alphas = [.5, 1, 5, 10]
-    groups = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes',
-              'Green_algae','Cyano_blue','Heterokonts','Cyano_red','Rhodophytes']
+    alphas = [.5, 1, 4]
+    # groups = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes',
+    #           'Green_algae','Cyano_blue','Heterokonts','Cyano_red','Rhodophytes',
+    #          'Eustigmatophyte', 'Raphidophyte']
     phyto_class_frxn, maxpft = dirichlet_phyto(alphas)
     
     # define species for each class first
@@ -53,7 +54,7 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
                 f['fx'].append(1-fx)
     
     # define chl distribution and get chl conc
-    sigma,scale = lognorm_params(.05,.15)
+    sigma,scale = lognorm_params(.3,.3)
     chlDist = lognorm_random(sigma, scale, 20000)
     chl = round(np.random.choice(chlDist), 3)
     
@@ -111,29 +112,29 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     
     ################### DEPTH FUNCTION #############################################
     #%
-    depth = np.random.choice(np.arange(1,21,1)) * -1
+    depth = np.random.choice(np.arange(10,31,1))
     s1 = np.arange(.005, .1, .005)
     s2 = np.arange(.1,.6,.05)
     s3 = np.arange(.6,1,.1)
     s = np.concatenate([s1,s2,s3])
     slope = np.random.choice(s)
     c = 30 # hypothetical (doesnt matter for xfactor)
-    d = np.arange(0,depth,-.5)
+    d = np.arange(0,depth,1)
     yfactor = []
     xfactor = []
     for k in d:
-        y = c * np.exp(-slope*-k)
+        y = c * np.exp(-slope*-(k*-1))
         x = y/c
         yfactor.append(y)
         if k == 0:
-            xfactor.append(0)
+            xfactor.append(1)
         else:
             xfactor.append(x)
     
     dprops = {'Depth':d,
               'xfactor':xfactor,
               'slope':slope,
-              'Dmax':d.min()*-1}
+              'Dmax':d.max()}
     iops['Depth'] = dprops
     
     ##################### Benthic Reflectance #######################################
@@ -168,8 +169,10 @@ def build_Case1(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
                                           'desert',
                                           'maritime_clean', 'maritime_polluted',
                                           'maritime_tropical', 'urban']),
-            'VZA': np.random.choice(range(10,50)),
-            'VAA': np.random.choice(range(60,120)),
+            'OZA': np.random.choice(range(10,55,5)),
+            'OAA': np.random.choice(range(60,120,5)),
+            'SZA': np.random.choice(range(5,70,5)),
+            'SAA': np.random.choice(range(30,65,5)),
             'wind': np.random.choice(np.linspace(0,14,29))
            }
     

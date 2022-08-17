@@ -7,6 +7,7 @@ Created on Thu Mar 10 09:06:20 2022
 """
 import numpy as np
 import pandas as pd
+import random
 
 ##
 def lognorm_params(mode, stddev):
@@ -32,23 +33,17 @@ def lognorm_random(sigma,scale,num):
 
 ##
 def dirichlet_phyto (alphas):
-    pftlist = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
-            'Cyano_blue','Heterokonts','Cyano_red','Rhodophytes']
+    pftListTot = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
+            'Cyano_blue','Heterokonts','Cyano_red','Rhodophytes','Eustigmatophyte', 'Raphidophyte']
+    pftList = random.sample(pftListTot, 9)
     dist = np.random.choice(alphas)
     distributions = np.random.dirichlet(np.ones(9) / dist, size=1)[0]
     # dmax = distributions.max()
     dx = np.argmax(distributions)
-    phyto_class_frxn = {   'Haptophytes': {'cfrxn': distributions[0], 'sps':[], 'fx':[]}, 
-                            'Diatoms': {'cfrxn': distributions[1], 'sps': [], 'fx':[]},
-                            'Dinoflagellates': {'cfrxn': distributions[2], 'sps':[], 'fx':[]},
-                            'Cryptophytes': {'cfrxn': distributions[3], 'sps':[], 'fx':[]},
-                            'Green_algae': {'cfrxn': distributions[4], 'sps':[], 'fx':[]},
-                            'Cyano_blue': {'cfrxn': distributions[5], 'sps':[], 'fx':[]},
-                            'Heterokonts': {'cfrxn': distributions[6], 'sps':[], 'fx':[]},
-                            'Cyano_red': {'cfrxn': distributions[7], 'sps':[], 'fx':[]},
-                            'Rhodophytes': {'cfrxn': distributions[8], 'sps':[], 'fx':[]}
-                            }   
-    maxpft = pftlist[dx]
+    phyto_class_frxn = {}
+    for i, phyto in enumerate(pftList):
+        phyto_class_frxn[phyto] = {'cfrxn': distributions[i], 'sps':[], 'fx':[]}
+    maxpft = pftList[dx]
     return phyto_class_frxn, maxpft
 
 ##
@@ -205,6 +200,10 @@ def phyto_iops_case1 (phyto_class_frxn, phy_library, classIOPs):
         for i, sp in enumerate(f['sps']):
             classIOPs[c][sp] = {}
             sims = phy_library[c][sp[:-2]]
+            try:
+                del sims['time']
+            except:
+                pass
             sim_idx = np.random.choice(list(sims), 1)[0] 
             info = sims[sim_idx]
             idx = np.random.choice(len(info['astar']), 1) 
@@ -217,15 +216,16 @@ def phyto_iops_case1 (phyto_class_frxn, phy_library, classIOPs):
             classIOPs[c][sp]['b'] = sp_chl * info['bstar'].iloc[idx,:].values[0]
             classIOPs[c][sp]['c'] = sp_chl * info['cstar'].iloc[idx,:].values[0]
             classIOPs[c][sp]['bb'] = sp_chl * info['bbstar'].iloc[idx,:].values[0]
-            classIOPs[c][sp]['VSF'] = sp_chl * info['VSF'][idx,:,:]
+            # classIOPs[c][sp]['VSF'] = sp_chl * info['VSF'][idx,:,:]
             classIOPs[c][sp]['Deff'] = deff[0]
             classIOPs[c][sp]['sp_chl_conc'] = sp_chl
-            for kk in ['ci','class','ncore','nshell','PFT1','PFT2','psdvol','size_class','Veff','Vs']:
+            # add back in psdvol and VSF ************
+            for kk in ['ci','class','ncore','nshell','PFT1','PFT2','size_class','Veff','Vs']:
                 classIOPs[c][sp][kk] = info[kk]
             classIOPs[c][sp]['psdmax'] = info['psd'].max()           
             
         # phyto class tot IOPs
-        for p in ['a','b','c','bb','VSF']:
+        for p in ['a','b','c','bb']: # add back in VSF ************
             class_tot_iop = 0
             for sp in f['sps']:
                 class_tot_iop = class_tot_iop + classIOPs[c][sp][p]
@@ -239,18 +239,18 @@ def phyto_iops_case1 (phyto_class_frxn, phy_library, classIOPs):
         classIOPs[c]['class_Deff'] = cl_sz
         if cl_sz <= 2:
             cl_sz_cl = 'pico'
-        elif 3 < cl_sz <= 6:
+        elif 2.01 < cl_sz <= 6:
             cl_sz_cl = 'small_nano'
-        elif 7 < cl_sz <= 11:
+        elif 6.01 < cl_sz <= 11:
             cl_sz_cl = 'med_nano'
-        elif 12 < cl_sz <= 20:
+        elif 11.01 < cl_sz <= 20:
             cl_sz_cl = 'large_nano'
-        elif cl_sz > 21:
+        elif cl_sz > 20.01:
             cl_sz_cl = 'micro'
         classIOPs[c]['class_sz_class'] = cl_sz_cl             
             
     # phyto component total iops
-    for p in ['a','b','c','bb','VSF']:
+    for p in ['a','b','c','bb']:
         comp_tot_iop = 0
         for c in phyto_class_frxn.keys():
             comp_tot_iop = comp_tot_iop + classIOPs[c]['{}_tot'.format(p)]
@@ -603,7 +603,8 @@ def dict_to_df (iops):
             'S400_450', 'S400_700','slope_ratio','a_tot', 'b_tot', 'bb_tot',]
     
     classes = ['Green_algae', 'Cryptophytes','Diatoms','Dinoflagellates','Heterokonts',
-               'Haptophytes','Cyano_blue','Cyano_red','Rhodophytes']
+               'Haptophytes','Cyano_blue','Cyano_red','Rhodophytes','Eustigmatophyte',
+               'Raphidophyte']
     row = []
     col_names = []
     
@@ -732,9 +733,11 @@ def dict_to_df (iops):
     row.append(atm['aero'].iloc[0,3:].values)
     col_names.append(atm['aero'].add_prefix('atm_').iloc[0,3:].index.values)
     row.append(atm['atm_prof'])
-    row.append(atm['VZA'])
-    row.append(atm['VAA'])
-    col_names.append(['prof','VZA','VAA'])
+    row.append(atm['OZA'])
+    row.append(atm['OAA'])
+    row.append(atm['SZA'])
+    row.append(atm['SAA'])
+    col_names.append(['prof','OZA','OAA','SZA','SAA'])
 
 
     col_names_final = np.hstack(col_names)
