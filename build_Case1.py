@@ -80,8 +80,8 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     
     # from lee 2002 for case1 waters
     r1 = np.arange(0,1.05,.05)
-    r2 = np.arange(0.05,.1,.005)
-    p1 = .1 + (0.5 * np.random.choice(r1) * aphy440) / (np.random.choice(r2) + aphy440) 
+    # r2 = np.arange(0.05,.1,.005)
+    p1 = .1 + (0.5 * np.random.choice(r1) * aphy440) / .05 + aphy440) 
     sf = np.random.choice(np.arange(0.05,.2,.01))
     anap440 = p1 * aphy440
     amin440 = sf * anap440
