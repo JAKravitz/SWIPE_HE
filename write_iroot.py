@@ -61,7 +61,7 @@ def iroot(l, iops, batch_name, uid, rootPath):
                          [2, -666, 440, 1, 0.014]]).reshape(2, -1)  # total
 
     # LINE 12-15 - RECORD 5D: SPECIFIC ABSORPTION DATA FILE NAMES
-    line12_15 = '\n'.join(['/nex/modules/m/hydrolight/HE60/data/H2OabDefaults_FRESHwater.txt',
+    line12_15 = '\n'.join(['/nex/modules/m/hydrolight/HE60/data/H2OabClearNat.txt',
                            'dummyastar.txt\n'])
 
     # LINE 16-17 - RECORD 5E: SPECIFIC SCATTERING PARAMTERS
@@ -101,7 +101,7 @@ def iroot(l, iops, batch_name, uid, rootPath):
     line81 = np.array(d2).reshape(1,-1) # depths
 
     # REST OF LINES ARE DATA FILE PATHS (82-93)...
-    line82_93 = '\n'.join(['/nex/modules/m/hydrolight/HE60/data/H2OabDefaults_FRESHwater.txt',
+    line82_93 = '\n'.join(['/nex/modules/m/hydrolight/HE60/data/H2OabClearNat.txt',
                            '1',
                            '{}HE60/iop_profiles/{}/{}/acDatatot_{}.txt'.format(rootPath,batch_name,uid,uid),
                            'dummyFilteredAc9.txt',

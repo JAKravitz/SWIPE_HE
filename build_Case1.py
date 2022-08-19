@@ -70,18 +70,12 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     # MINERALS
     classes = ['SAN1','AUS1','ICE1','KUW1','NIG1','SAH1','OAH1']
     idx440 = int(np.where(l==440)[0])
-    # run_mins = random.choices(list(datanap.keys()), k=2) # allows repeats
-    run_mins = random.choices(classes, k=2)
-    fx = np.random.choice(frxns)
-    min_frxn = {run_mins[0]+'1': fx,
-                run_mins[1]+'2': 1-fx}
-    
     aphy440 = iops['Phyto']['a_tot'][idx440]
     
     # from lee 2002 for case1 waters
     r1 = np.arange(0,1.05,.05)
     # r2 = np.arange(0.05,.1,.005)
-    p1 = .1 + (0.5 * np.random.choice(r1) * aphy440) / .05 + aphy440) 
+    p1 = .1 + (0.5 * np.random.choice(r1) * aphy440) / (.05 + aphy440) 
     sf = np.random.choice(np.arange(0.05,.2,.01))
     anap440 = p1 * aphy440
     amin440 = sf * anap440
@@ -89,7 +83,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     # mineral component
     minIOPs = {}
     minIOPs['amin440'] = amin440
-    minIOPs = min_iops_case1(min_frxn, datanap, minIOPs)    
+    minIOPs = min_iops_case1(datanap, minIOPs)    
     iops['Min'] = minIOPs 
     
     # DETRITUS
@@ -103,12 +97,13 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     #%
     ##################### CDOM ######################################################
     
-    slopes = np.random.normal(.03,.005,5000)
-    slopes = slopes[slopes > 0]
-    slope = np.random.choice(slopes)
+    # slopes = np.random.normal(.03,.005,5000)
+    # slopes = slopes[slopes > 0]
+    # slope = np.random.choice(slopes)
     r1 = np.arange(0, 1.05, .05)
     p2 = 0.3 + (5.7 * np.random.choice(r1,1) * aphy440) / (0.02 + aphy440)
     ag440 = p2 * aphy440
+    # ag440 = np.random.choice([.0001,])
     cdomIOPs = cdom_iops(ag440)
     iops['CDOM'] = cdomIOPs
     
@@ -182,7 +177,15 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     
     iops['Atm'] = atm
     
-    ############### ARD FORMAT ###########################################################
+    #################### Chl Fluorescence ############################################
+    fqy = np.random.choice(np.linspace(.005,.015,50)).astype(np.float16)
+    qa = np.random.choice([0.3,0.4,0.5,0.6])
+    iops['chla_fluor'] = {}
+    iops['chla_fluor']['FQY'] = fqy
+    classIOPs['chla_fluor']['Qa'] = qa
+    
+    
+    ############### ARD FORMAT #######################################################
     #%
     cols, row = dict_to_df(iops)
     
