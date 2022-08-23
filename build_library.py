@@ -571,12 +571,12 @@ def cdom_iops (ag440):
 ##
 def col_name_append(name):
     if 'cdom' in name.split('_'):
-        l = np.arange(240, 900, 2.5)
+        l = np.arange(240, 900, 2.5).astype(str)
     else:
-        l = np.arange(400, 902.5, 2.5)  
-    l2 = [str(x) for x in l]
-    l3 = ['{}'.format(name) + lx for lx in l2]  
-    return l3
+        l = np.arange(400, 902.5, 2.5).astype(str)  
+    # l2 = [str(x) for x in l]
+    l2 = ['{}'.format(name) + lx for lx in l]  
+    return l2
 
 ##
 def dict_to_df (iops):
@@ -721,14 +721,32 @@ def dict_to_df (iops):
     row.append(atm['SZA'])
     row.append(atm['SAA'])
     col_names.append(['prof','OZA','OAA','SZA','SAA'])
-
-
+    
+    # fluorescence 
+    fl_data = classIOPs['fluorescence']
+    row.append(fl_data['FQY'])
+    row.append(fl_data['aphyEuk'])
+    row.append(fl_data['aphyCy'])
+    col_names.append(['FQY'])
+    col_names.append(col_name_append('aphyEuk_'))
+    col_names.append(col_name_append('aphyCy_'))
+    
+    # sunglint
+    row.append(0)
+    row.append(0)
+    col_names.append(['Sg_included'])
+    col_names.append(['Sg_amplitude'])
+    
+    # finalize
     col_names_final = np.hstack(col_names)
-    row_final = np.hstack((row))    
+    row_final = np.hstack((row)) 
     
-    # df = pd.Series(final, index=col_names_final)
+    # duplicate for sunglint addition
+    row2 = row_final.copy()
+    row2[-2:] = [1,'nan']
+    row3 = np.vstack((row_final,row2))
     
-    return col_names_final, row_final
+    return col_names_final, row3
 
 
 

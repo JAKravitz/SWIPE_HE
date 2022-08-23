@@ -35,7 +35,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     #################### PHYTOPLANKTON ############################################## 
     
     # assign class contributions
-    alphas = [.5, 1, 4]
+    alphas = [.5, 1, 5, 10]
     # groups = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes',
     #           'Green_algae','Cyano_blue','Heterokonts','Cyano_red','Rhodophytes',
     #          'Eustigmatophyte', 'Raphidophyte']
@@ -62,6 +62,29 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     classIOPs = {}
     classIOPs['TotChl'] = chl
     classIOPs = phyto_iops_case1(phyto_class_frxn, phy_library, classIOPs)
+    
+    # chl fluorescence 
+    fqy = np.random.choice(np.linspace(.005,.015,50)).astype(np.float16)
+    aphyEuk = []
+    aphyCy = []
+    for i,k in classIOPs.items():
+        if i in ['TotChl','a_tot','b_tot','c_tot','bb_tot','FQY','Qa','fluorescence']:
+            continue
+        elif i in ['Cyano_blue']:
+            aphyCy.append(k['a_tot'])
+        else:
+            aphyEuk.append(k['a_tot'])
+    aphyEukSum = pd.DataFrame(aphyEuk).sum().values
+    
+    if len(aphyCy) == 0:
+        aphyCySum = np.zeros(201)
+    else:
+        aphyCySum = np.array(aphyCy)[0]
+        
+    classIOPs['fluorescence'] = {'FQY': fqy,
+                                 'aphyEuk' : aphyEukSum,
+                                 'aphyCy' : aphyCySum}
+    
     iops['Phyto'] = classIOPs  
     
     #%
@@ -169,7 +192,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
             'OZA': np.random.choice(range(10,55,5)),
             'OAA': np.random.choice(range(60,120,5)),
             'SZA': np.random.choice(range(5,70,5)),
-            'SAA': np.random.choice(range(30,65,5)),
+            'SAA': np.random.choice(range(30,160,10)),
             'wind': np.random.choice(np.linspace(0,14,29))
            }
     
@@ -178,11 +201,14 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     iops['Atm'] = atm
     
     #################### Chl Fluorescence ############################################
-    fqy = np.random.choice(np.linspace(.005,.015,50)).astype(np.float16)
-    qa = np.random.choice([0.3,0.4,0.5,0.6])
-    iops['chla_fluor'] = {}
-    iops['chla_fluor']['FQY'] = fqy
-    classIOPs['chla_fluor']['Qa'] = qa
+    
+    # fqy = np.random.choice(np.linspace(.005,.015,50)).astype(np.float16)
+    # qa = np.random.choice([0.3,0.4,0.5,0.6])
+    # iops['chla_fluor'] = {}
+    # iops['chla_fluor']['FQY'] = fqy
+    # iops['chla_fluor']['Qa'] = qa
+    # iops['Phyto']['chla_fluor']['FQY'] = fqy
+    # iops['chla_fluor']['Qa'] = qa
     
     
     ############### ARD FORMAT #######################################################
