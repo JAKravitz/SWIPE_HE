@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-def iroot(l, iops, batch_name, uid, rootPath):
+def iroot(l, iops, batch_name, uid, rootPath, br=False):
     
     import os
     import numpy as np
@@ -26,10 +26,15 @@ def iroot(l, iops, batch_name, uid, rootPath):
     # for i, name in enumerate(snames):
         
     # create .txt filename
-    # fname0 = datapath.split('/')[5]
-    fname0 = 'I_' + batch_name +'_' + uid
-    fname = 'I_' + batch_name +'_' + uid + '.txt'
-    fpath = batchPath + fname
+    if br == False:
+        fname0 = 'I_' + batch_name +'_' + uid
+        fname = 'I_' + batch_name +'_' + uid + '.txt'
+        fpath = batchPath + fname
+    else:
+        uidBR = uid + '_BR'
+        fname0 = 'I_' + batch_name +'_' + uidBR
+        fname = 'I_' + batch_name +'_' + uidBR + '.txt'
+        fpath = batchPath + fname        
 
     ''' --------- SPECIFY LINES FOR IROOT FILE --------- '''
 
@@ -95,12 +100,20 @@ def iroot(l, iops, batch_name, uid, rootPath):
     # UNLESS YOU WANT TO CHANGE ATMOSPHERICS, DEPTHS, PATHS TO IOPS, ETC..
     line78 = np.array([-1,0,0,29.92,1,80,2.5,15,ws,300]).reshape(1,-1) # atmospherics
     line79 = np.array([ws,1.34,20,35,3]).reshape(1,-1) # surface info
-    line80 = np.array([0,0]).reshape(1,-1) # bottom reflectance
+    if br == False:
+        line80 = np.array([0,0]).reshape(1,-1) # bottom reflectance
+    else:
+        line80 = np.array([2,0]).reshape(1,-1) # bottom reflectance
     d1 = [0,len(iops['Depth']['Depth'])]
     d2 = d1 + iops['Depth']['Depth'].tolist()
     line81 = np.array(d2).reshape(1,-1) # depths
 
     # REST OF LINES ARE DATA FILE PATHS (82-93)...
+    if br == False:
+        R = 'dummyR.bot'
+    else:
+        R = '{}HE60/iop_profiles/{}/{}/benthicData_{}.txt'.format(rootPath,batch_name,uid,uid)
+        
     line82_93 = '\n'.join(['/nex/modules/m/hydrolight/HE60/data/H2OabClearNat.txt',
                            '1',
                            '{}HE60/iop_profiles/{}/{}/acDatatot_{}.txt'.format(rootPath,batch_name,uid,uid),
@@ -108,7 +121,7 @@ def iroot(l, iops, batch_name, uid, rootPath):
                            '{}HE60/iop_profiles/{}/{}/bbDatatot_{}.txt'.format(rootPath,batch_name,uid,uid),
                            'dummyCHLdata.txt',
                            'dummyCDOMdata.txt',
-                           'dummyR.bot',
+                           R,
                            'dummyComp.txt',
                            'dummyComp.txt',
                            'DummyIrrad.txt',
@@ -148,6 +161,6 @@ def iroot(l, iops, batch_name, uid, rootPath):
         with io.open(runPath + runlist_title, 'a+') as r:
             r.write(str(fname) + '\r\n')
             
-        # WRITE FILE TO batchlist.sh FOR HE5 BATCH PROCESSING
-        with io.open(runPath + batchlist_title, 'a+') as fp:
-            fp.write('/nex/modules/m/hydrolight/HE60/backend/./EcoLight6 < ../run/batch/{}\n'.format(fname))            
+        # # WRITE FILE TO batchlist.sh FOR HE5 BATCH PROCESSING
+        # with io.open(runPath + batchlist_title, 'a+') as fp:
+        #     fp.write('/nex/modules/m/hydrolight/HE60/backend/./EcoLight6 < ../run/batch/{}\n'.format(fname))            

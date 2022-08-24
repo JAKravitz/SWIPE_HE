@@ -64,7 +64,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     classIOPs = phyto_iops_case1(phyto_class_frxn, phy_library, classIOPs)
     
     # chl fluorescence 
-    fqy = np.random.choice(np.linspace(.005,.015,50)).astype(np.float16)
+    fqy = np.random.choice(np.linspace(.005,.02,50)).astype(np.float16)
     aphyEuk = []
     aphyCy = []
     for i,k in classIOPs.items():

@@ -727,9 +727,15 @@ def dict_to_df (iops):
     row.append(fl_data['FQY'])
     row.append(fl_data['aphyEuk'])
     row.append(fl_data['aphyCy'])
+    row.append('nan')
     col_names.append(['FQY'])
     col_names.append(col_name_append('aphyEuk_'))
     col_names.append(col_name_append('aphyCy_'))
+    col_names.append('Fl685_amp')
+    
+    # bottom refl
+    row.append(0)
+    col_names.append(['Br_included'])
     
     # sunglint
     row.append(0)
@@ -741,12 +747,17 @@ def dict_to_df (iops):
     col_names_final = np.hstack(col_names)
     row_final = np.hstack((row)) 
     
-    # duplicate for sunglint addition
+    # duplicate for sunglint and bottom refl addition
     row2 = row_final.copy()
-    row2[-2:] = [1,'nan']
-    row3 = np.vstack((row_final,row2))
+    row2[-2:] = [1,'nan'] # sg included, nan as placeholder for sg amplitude
+    row3 = row_final.copy()
+    row3[-3] = 1 # Br included
+    row4 = row_final.copy()
+    row4[-3:] = [1,1,'nan'] # Sg and Br included
     
-    return col_names_final, row3
+    row5 = np.vstack((row_final,row2,row3,row4))
+    
+    return col_names_final, row5
 
 
 
