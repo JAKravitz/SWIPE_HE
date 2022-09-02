@@ -35,10 +35,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     #################### PHYTOPLANKTON ############################################## 
     
     # assign class contributions
-    alphas = [.5, 1, 4]
-    # groups = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes',
-    #           'Green_algae','Cyano_blue','Heterokonts','Cyano_red','Rhodophytes',
-    #          'Eustigmatophyte', 'Raphidophyte']
+    alphas = [1, 5, 10, 20]
     phyto_class_frxn, maxpft = dirichlet_phyto(alphas)
     
     # define species for each class first
@@ -54,7 +51,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
                 f['fx'].append(1-fx)
     
     # define chl distribution and get chl conc
-    sigma,scale = lognorm_params(.5,.5)
+    sigma,scale = lognorm_params(.5,1)
     chlDist = lognorm_random(sigma, scale, 20000)
     chl = round(np.random.choice(chlDist), 3)
     
@@ -62,6 +59,29 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     classIOPs = {}
     classIOPs['TotChl'] = chl
     classIOPs = phyto_iops_case1(phyto_class_frxn, phy_library, classIOPs)
+    
+    # chl fluorescence 
+    fqy = np.random.choice(np.linspace(.005,.02,50)).astype(np.float16)
+    aphyEuk = []
+    aphyCy = []
+    for i,k in classIOPs.items():
+        if i in ['TotChl','a_tot','b_tot','c_tot','bb_tot','FQY','fluorescence']:
+            continue
+        elif i in ['Cyano_blue']:
+            aphyCy.append(k['a_tot'])
+        else:
+            aphyEuk.append(k['a_tot'])
+    aphyEukSum = pd.DataFrame(aphyEuk).sum().values
+    
+    if len(aphyCy) == 0:
+        aphyCySum = np.zeros(201)
+    else:
+        aphyCySum = np.array(aphyCy)[0]
+        
+    classIOPs['fluorescence'] = {'FQY': fqy,
+                                 'aphyEuk' : aphyEukSum,
+                                 'aphyCy' : aphyCySum}
+    
     iops['Phyto'] = classIOPs  
     
     #%
@@ -70,18 +90,12 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     # MINERALS
     classes = ['SAN1','AUS1','ICE1','KUW1','NIG1','SAH1','OAH1']
     idx440 = int(np.where(l==440)[0])
-    # run_mins = random.choices(list(datanap.keys()), k=2) # allows repeats
-    run_mins = random.choices(classes, k=2)
-    fx = np.random.choice(frxns)
-    min_frxn = {run_mins[0]+'1': fx,
-                run_mins[1]+'2': 1-fx}
-    
     aphy440 = iops['Phyto']['a_tot'][idx440]
     
     # from lee 2002 for case1 waters
     r1 = np.arange(0,1.05,.05)
     # r2 = np.arange(0.05,.1,.005)
-    p1 = .1 + (0.5 * np.random.choice(r1) * aphy440) / .05 + aphy440) 
+    p1 = .1 + (0.5 * np.random.choice(r1) * aphy440) / (.05 + aphy440) 
     sf = np.random.choice(np.arange(0.05,.2,.01))
     anap440 = p1 * aphy440
     amin440 = sf * anap440
@@ -89,7 +103,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     # mineral component
     minIOPs = {}
     minIOPs['amin440'] = amin440
-    minIOPs = min_iops_case1(min_frxn, datanap, minIOPs)    
+    minIOPs = min_iops_case1(datanap, minIOPs)    
     iops['Min'] = minIOPs 
     
     # DETRITUS
@@ -103,25 +117,26 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     #%
     ##################### CDOM ######################################################
     
-    slopes = np.random.normal(.03,.005,5000)
-    slopes = slopes[slopes > 0]
-    slope = np.random.choice(slopes)
+    # slopes = np.random.normal(.03,.005,5000)
+    # slopes = slopes[slopes > 0]
+    # slope = np.random.choice(slopes)
     r1 = np.arange(0, 1.05, .05)
     p2 = 0.3 + (5.7 * np.random.choice(r1,1) * aphy440) / (0.02 + aphy440)
     ag440 = p2 * aphy440
+    # ag440 = np.random.choice([.0001,])
     cdomIOPs = cdom_iops(ag440)
     iops['CDOM'] = cdomIOPs
     
     ################### DEPTH FUNCTION #############################################
     #%
-    depth = np.random.choice(np.arange(10,31,1))
+    depth = np.random.choice(np.arange(1,31,1))
     s1 = np.arange(.005, .1, .005)
     s2 = np.arange(.1,.6,.05)
     s3 = np.arange(.6,1,.1)
     s = np.concatenate([s1,s2,s3])
     slope = np.random.choice(s)
     c = 30 # hypothetical (doesnt matter for xfactor)
-    d = np.arange(0,depth,1)
+    d = np.arange(0, depth, .5)
     yfactor = []
     xfactor = []
     for k in d:
@@ -174,7 +189,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
             'OZA': np.random.choice(range(10,55,5)),
             'OAA': np.random.choice(range(60,120,5)),
             'SZA': np.random.choice(range(5,70,5)),
-            'SAA': np.random.choice(range(30,65,5)),
+            'SAA': np.random.choice(range(30,160,10)),
             'wind': np.random.choice(np.linspace(0,14,29))
            }
     
@@ -182,7 +197,8 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     
     iops['Atm'] = atm
     
-    ############### ARD FORMAT ###########################################################
+    
+    ############### ARD FORMAT #######################################################
     #%
     cols, row = dict_to_df(iops)
     
