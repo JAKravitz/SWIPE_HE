@@ -32,21 +32,26 @@ def lognorm_random(sigma,scale,num):
     return s
 
 ##
-def dirichlet_phyto (alphas):
-    pftListTot = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
-            'Cyano_blue','Heterokonts','Cyano_red','Rhodophytes','Eustigmatophyte', 'Raphidophyte']
+def dirichlet_phyto (alphas, case1=True):
+    if case1 = True:
+        pftListTot = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
+                'Cyano_blue','Heterokonts','Cyano_red','Rhodophytes','Eustigmatophyte', 'Raphidophyte']
+    elif case1 = False:
+        pftListTot = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
+                'Cyano_blue','Heterokonts','Rhodophytes','Eustigmatophyte', 'Raphidophyte'] 
+        
     pftList = random.sample(pftListTot, 9)
     dist = np.random.choice(alphas)
     distributions = np.random.dirichlet(np.ones(9) / dist, size=1)[0]
-    # dmax = distributions.max()
-    dx = np.argmax(distributions)
+    dmax = np.argmax(distributions)
+    # dmin = np.argmin(distributsions)
+    maxpft = pftList[dx]
     phyto_class_frxn = {}
     for i, phyto in enumerate(pftList):
         phyto_class_frxn[phyto] = {'cfrxn': distributions[i], 'sps':[], 'fx':[]}
     out = list(set(pftListTot) - set(pftList))
     for p in out:
         phyto_class_frxn[p] = {'cfrxn': 0, 'sps':[], 'fx':[]}
-    maxpft = pftList[dx]
     return phyto_class_frxn, maxpft
 
 ##
@@ -151,8 +156,19 @@ def dirichlet_adj (alphas,groups,adj_lib):
     return adj_frxn
 
 ##
-def define_case2_chlDist (phyto_class_frxn, maxpft):
-    # if cyano bloom
+def define_case2_chlDist (phyto_class_frxn, maxpft, case):
+    if case == 'case2':
+    
+    elif case == 'bloom':
+    
+    elif case == 'cyano':
+    
+    elif case == 'cdom':
+    
+    elif case == 'nap':
+    
+    
+    
     if maxpft == 'Cyano_blue' and 'M. aeruginosa' in phyto_class_frxn[maxpft]['sps']:
         
         # chl range for microcystis blooms

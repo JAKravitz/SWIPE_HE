@@ -12,7 +12,7 @@ import numpy as np
 import pickle
 import random
 
-def build_Case2(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
+def build_Case2(phy_library, datanap, benthic_lib, adj_lib, aero_lib, case='case2'):
 
     # lambda
     l = np.arange(400, 902.5, 2.5)  
@@ -35,7 +35,7 @@ def build_Case2(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
 #################### PHYTOPLANKTON ##############################################    
     
     # assign class contributions
-    alphas = [1, 5, 10, 20]
+    alphas = [1, 5, 10, 15]
     phyto_class_frxn, maxpft = dirichlet_phyto(alphas)
 
     # define species for each class first
@@ -51,7 +51,7 @@ def build_Case2(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
                 f['fx'].append(1-fx)
     
     # define chl distribution and get chl conc
-    chl = define_case2_chlDist(phyto_class_frxn, maxpft)
+    chl = define_case2_chlDist(phyto_class_frxn, maxpft, case=case)
     
     # phyto classes
     classIOPs = {}
