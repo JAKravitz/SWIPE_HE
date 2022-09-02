@@ -104,6 +104,9 @@ def iroot(l, iops, batch_name, uid, rootPath, br=False):
         line80 = np.array([0,0]).reshape(1,-1) # bottom reflectance
     else:
         line80 = np.array([2,0]).reshape(1,-1) # bottom reflectance
+    fmt1 = '%d,%d,'
+    fmt2 = '%1.1f,'*len(iops['Depth']['Depth'])
+    fmtD = fmt1 +fmt2
     d1 = [0,len(iops['Depth']['Depth'])]
     d2 = d1 + iops['Depth']['Depth'].tolist()
     line81 = np.array(d2).reshape(1,-1) # depths
@@ -154,7 +157,7 @@ def iroot(l, iops, batch_name, uid, rootPath, br=False):
         np.savetxt(f, line78, fmt='%d,%d,%d,%2.2f,%d,%d,%1.1f,%d,%d,%d')
         np.savetxt(f, line79, fmt='%d,%1.2f,%d,%d,%d')
         np.savetxt(f, line80, delimiter=',', fmt='%d')
-        np.savetxt(f, line81, delimiter=',', fmt='%d')
+        np.savetxt(f, line81, delimiter=',', fmt=fmtD)
         f.writelines(line82_93)
 
         # WRITE FILE TO RUNLIST.TXT FOR HE5 BATCH PROCESSING

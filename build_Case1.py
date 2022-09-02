@@ -35,10 +35,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     #################### PHYTOPLANKTON ############################################## 
     
     # assign class contributions
-    alphas = [.5, 1, 5, 10]
-    # groups = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes',
-    #           'Green_algae','Cyano_blue','Heterokonts','Cyano_red','Rhodophytes',
-    #          'Eustigmatophyte', 'Raphidophyte']
+    alphas = [1, 5, 10, 20]
     phyto_class_frxn, maxpft = dirichlet_phyto(alphas)
     
     # define species for each class first
@@ -54,7 +51,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
                 f['fx'].append(1-fx)
     
     # define chl distribution and get chl conc
-    sigma,scale = lognorm_params(.5,.5)
+    sigma,scale = lognorm_params(.5,1)
     chlDist = lognorm_random(sigma, scale, 20000)
     chl = round(np.random.choice(chlDist), 3)
     
@@ -68,7 +65,7 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     aphyEuk = []
     aphyCy = []
     for i,k in classIOPs.items():
-        if i in ['TotChl','a_tot','b_tot','c_tot','bb_tot','FQY','Qa','fluorescence']:
+        if i in ['TotChl','a_tot','b_tot','c_tot','bb_tot','FQY','fluorescence']:
             continue
         elif i in ['Cyano_blue']:
             aphyCy.append(k['a_tot'])
@@ -132,14 +129,14 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     
     ################### DEPTH FUNCTION #############################################
     #%
-    depth = np.random.choice(np.arange(10,31,1))
+    depth = np.random.choice(np.arange(1,31,1))
     s1 = np.arange(.005, .1, .005)
     s2 = np.arange(.1,.6,.05)
     s3 = np.arange(.6,1,.1)
     s = np.concatenate([s1,s2,s3])
     slope = np.random.choice(s)
     c = 30 # hypothetical (doesnt matter for xfactor)
-    d = np.arange(0,depth,1)
+    d = np.arange(0, depth, .5)
     yfactor = []
     xfactor = []
     for k in d:
@@ -199,16 +196,6 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     # add altitude, water vapor, ozone, wind (for sunglint) !!!!!
     
     iops['Atm'] = atm
-    
-    #################### Chl Fluorescence ############################################
-    
-    # fqy = np.random.choice(np.linspace(.005,.015,50)).astype(np.float16)
-    # qa = np.random.choice([0.3,0.4,0.5,0.6])
-    # iops['chla_fluor'] = {}
-    # iops['chla_fluor']['FQY'] = fqy
-    # iops['chla_fluor']['Qa'] = qa
-    # iops['Phyto']['chla_fluor']['FQY'] = fqy
-    # iops['chla_fluor']['Qa'] = qa
     
     
     ############### ARD FORMAT #######################################################

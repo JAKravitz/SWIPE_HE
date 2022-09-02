@@ -12,7 +12,10 @@ import numpy as np
 import pickle
 import random
 
-def build_Case2(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
+def build_Case2(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
+
+    # lambda
+    l = np.arange(400, 902.5, 2.5)  
     
     # initiate dictionary
     iops = {}
@@ -32,9 +35,7 @@ def build_Case2(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
 #################### PHYTOPLANKTON ##############################################    
     
     # assign class contributions
-    alphas = [.5, 1, 5, 10]
-    groups = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes',
-              'Green_algae','Cyano_blue','Heterokonts','Cyano_red','Rhodophytes']
+    alphas = [1, 5, 10, 20]
     phyto_class_frxn, maxpft = dirichlet_phyto(alphas)
 
     # define species for each class first
@@ -55,46 +56,71 @@ def build_Case2(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     # phyto classes
     classIOPs = {}
     classIOPs['TotChl'] = chl
-    classIOPs = phyto_iops(phyto_class_frxn, phy_library, classIOPs)
-    iops['Phyto'] = classIOPs    
+    classIOPs = phyto_iops_case2(phyto_class_frxn, phy_library, classIOPs)
+
+    # chl fluorescence 
+    fqy = np.random.choice(np.linspace(.005,.02,50)).astype(np.float16)
+    aphyEuk = []
+    aphyCy = []
+    for i,k in classIOPs.items():
+        if i in ['TotChl','a_tot','b_tot','c_tot','bb_tot','FQY','fluorescence','TotPC']:
+            continue
+        elif i in ['Cyano_blue']:
+            aphyCy.append(k['a_tot'])
+        else:
+            aphyEuk.append(k['a_tot'])
+    aphyEukSum = pd.DataFrame(aphyEuk).sum().values
+    
+    if len(aphyCy) == 0:
+        aphyCySum = np.zeros(201)
+    else:
+        aphyCySum = np.array(aphyCy)[0]
+        
+    classIOPs['fluorescence'] = {'FQY': fqy,
+                                 'aphyEuk' : aphyEukSum,
+                                 'aphyCy' : aphyCySum}
+    
+    iops['Phyto'] = classIOPs  
 
 ####################### NON ALGAL PARTICLES ####################################
 #%
     # MINERALS
+
+    classes = ['SAN1','AUS1','ICE1','KUW1','NIG1','SAH1','OAH1']
+    # idx440 = int(np.where(l==440)[0])
+    # aphy440 = iops['Phyto']['a_tot'][idx440]
     
-    run_mins = random.choices(list(datamin.keys()), k=2) # allows repeats
-    fx = np.random.choice(frxns)
-    min_frxn = {run_mins[0]+'1': fx,
-                run_mins[1]+'2': 1-fx}
+    # run_mins = random.choices(list(datamin.keys()), k=2) # allows repeats
+    # fx = np.random.choice(frxns)
+    # min_frxn = {run_mins[0]+'1': fx,
+    #             run_mins[1]+'2': 1-fx}
         
-    sigma,scale = lognorm_params(.5,10)
+    sigma,scale = lognorm_params(1,15)
     napData = lognorm_random(sigma, scale, 20000) 
-    napData = napData[napData < 60]
-    # plt.hist(napData, bins=500)
-    # plt.xlim(0,100)
+    # napData = napData[napData < 60]
     
     nap = round(np.random.choice(napData), 3)
-    sf = np.random.choice(np.linspace(.6, .95, 50))
-    minl = nap * sf
+    sf = np.random.choice(np.linspace(.4, .95, 50))
+    cmin = nap * sf
 
     # mineral component
     minIOPs = {}
-    minIOPs['Tot_conc'] = minl
-    minIOPs = min_iops(min_frxn, datamin, minIOPs)    
+    minIOPs['Tot_conc'] = cmin
+    minIOPs = min_iops_case2(datanap, minIOPs, cmin)    
     iops['Min'] = minIOPs 
     
     # DETRITUS
     
     detIOPs = {}
-    cdet = nap - minl 
-    detIOPs = det_iops(cdet, datadet, detIOPs)
+    cdet = nap - cmin
+    detIOPs = det_iops_case2(datanap, detIOPs, cdet)
     iops['Det'] = detIOPs
 
 ##################### CDOM ######################################################
 #%
-    sigma,scale = lognorm_params(.5,5)
+    sigma,scale = lognorm_params(.5,1)
     domData = lognorm_random(sigma, scale, 20000)  
-    domData = domData[domData < 50]
+    # domData = domData[domData < 50]
     # plt.hist(domData, bins=500)
     # plt.xlim(0,60)
     
@@ -104,29 +130,33 @@ def build_Case2(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
 
 ################### DEPTH FUNCTION #############################################
 #%
-    depth = np.random.choice(np.arange(1,21,1)) * -1
+    if chl < 10:
+        depth = np.random.choice(np.arange(1,21,1))
+    else:
+        depth = np.random.choice(np.arange(1,11,1)) 
+        
     s1 = np.arange(.005, .1, .005)
     s2 = np.arange(.1,.6,.05)
     s3 = np.arange(.6,1,.1)
     s = np.concatenate([s1,s2,s3])
     slope = np.random.choice(s)
     c = 30 # hypothetical (doesnt matter for xfactor)
-    d = np.arange(0,depth,-.5)
+    d = np.arange(0, depth, .5)
     yfactor = []
     xfactor = []
     for k in d:
-        y = c * np.exp(-slope*-k)
+        y = c * np.exp(-slope*-(k*-1))
         x = y/c
         yfactor.append(y)
         if k == 0:
-            xfactor.append(0)
+            xfactor.append(1)
         else:
             xfactor.append(x)
     
     dprops = {'Depth':d,
               'xfactor':xfactor,
               'slope':slope,
-              'Dmax':d.min()*-1}
+              'Dmax':d.max()}
     iops['Depth'] = dprops
 
 ##################### Benthic Reflectance #######################################
@@ -163,8 +193,10 @@ def build_Case2(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
                                           'desert',
                                           'maritime_clean', 'maritime_polluted',
                                           'maritime_tropical', 'urban']),
-            'VZA': np.random.choice(range(10,50)),
-            'VAA': np.random.choice(range(60,120)),
+            'OZA': np.random.choice(range(10,55,5)),
+            'OAA': np.random.choice(range(60,120,5)),
+            'SZA': np.random.choice(range(5,70,5)),
+            'SAA': np.random.choice(range(30,160,10)),
             'wind': np.random.choice(np.linspace(0,14,29))
            }
     
@@ -172,7 +204,7 @@ def build_Case2(phy_library, datamin, datadet, benthic_lib, adj_lib, aero_lib):
     
     iops['Atm'] = atm
 
-############### SAVE ###########################################################
+############### ARD FORMAT ###########################################################
 #%
     cols, row = dict_to_df(iops)
     

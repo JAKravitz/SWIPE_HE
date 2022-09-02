@@ -43,6 +43,9 @@ def dirichlet_phyto (alphas):
     phyto_class_frxn = {}
     for i, phyto in enumerate(pftList):
         phyto_class_frxn[phyto] = {'cfrxn': distributions[i], 'sps':[], 'fx':[]}
+    out = list(set(pftListTot) - set(pftList))
+    for p in out:
+        phyto_class_frxn[p] = {'cfrxn': 0, 'sps':[], 'fx':[]}
     maxpft = pftList[dx]
     return phyto_class_frxn, maxpft
 
@@ -275,6 +278,10 @@ def phyto_iops_case2 (phyto_class_frxn, phy_library, classIOPs):
         for i, sp in enumerate(f['sps']):
             classIOPs[c][sp] = {}
             sims = phy_library[c][sp[:-2]]
+            try:
+                del sims['time']
+            except:
+                pass
             sim_idx = np.random.choice(list(sims), 1)[0] 
             info = sims[sim_idx]
             idx = np.random.choice(len(info['astar']), 1) 
@@ -287,7 +294,7 @@ def phyto_iops_case2 (phyto_class_frxn, phy_library, classIOPs):
             classIOPs[c][sp]['b'] = sp_chl * info['bstar'].iloc[idx,:].values[0]
             classIOPs[c][sp]['c'] = sp_chl * info['cstar'].iloc[idx,:].values[0]
             classIOPs[c][sp]['bb'] = sp_chl * info['bbstar'].iloc[idx,:].values[0]
-            classIOPs[c][sp]['VSF'] = sp_chl * info['VSF'][idx,:,:]
+            # classIOPs[c][sp]['VSF'] = sp_chl * info['VSF'][idx,:,:]
             classIOPs[c][sp]['Deff'] = deff[0]
             classIOPs[c][sp]['sp_chl_conc'] = sp_chl
             for kk in ['ci','class','ncore','nshell','PFT1','PFT2','psdvol','size_class','Veff','Vs']:
@@ -315,7 +322,7 @@ def phyto_iops_case2 (phyto_class_frxn, phy_library, classIOPs):
             
             
         # phyto class tot IOPs
-        for p in ['a','b','c','bb','VSF']:
+        for p in ['a','b','c','bb']:
             class_tot_iop = 0
             for sp in f['sps']:
                 class_tot_iop = class_tot_iop + classIOPs[c][sp][p]
@@ -329,16 +336,18 @@ def phyto_iops_case2 (phyto_class_frxn, phy_library, classIOPs):
         classIOPs[c]['class_Deff'] = cl_sz
         if cl_sz <= 2:
             cl_sz_cl = 'pico'
-        elif 2 < cl_sz <= 11:
+        elif 2.01 < cl_sz <= 6:
             cl_sz_cl = 'small_nano'
-        elif 11 < cl_sz <= 20:
+        elif 6.01 < cl_sz <= 11:
+            cl_sz_cl = 'med_nano'
+        elif 11.01 < cl_sz <= 20:
             cl_sz_cl = 'large_nano'
-        elif cl_sz > 20:
+        elif cl_sz > 20.01:
             cl_sz_cl = 'micro'
         classIOPs[c]['class_sz_class'] = cl_sz_cl             
             
     # phyto component total iops
-    for p in ['a','b','c','bb','VSF']:
+    for p in ['a','b','c','bb']:
         comp_tot_iop = 0
         for c in phyto_class_frxn.keys():
             comp_tot_iop = comp_tot_iop + classIOPs[c]['{}_tot'.format(p)]
@@ -353,9 +362,7 @@ def det_iops_case1 (datanap, detIOPs):
     l = np.arange(400, 902.5, 2.5)
     idx440 = int(np.where(l==440)[0])
     idx700 = int(np.where(l==700)[0])
-
     sim_idx = np.random.choice(datanap['DET']['a'].index)
-    # info = datanap['DET'][sim_idx]
     astar = datanap['DET']['a'].loc[sim_idx,:].values
     cdet = detIOPs['adet440'] / astar[idx440]
     detIOPs['Tot_conc'] = cdet
@@ -363,10 +370,7 @@ def det_iops_case1 (datanap, detIOPs):
     detIOPs['b_tot'] = cdet * datanap['DET']['b'].loc[sim_idx,:].values
     detIOPs['bb_tot'] = cdet * datanap['DET']['bb'].loc[sim_idx,:].values
     # detIOPs['VSF_tot'] = cdet * info['VSF'][0]
-    detIOPs['Tot_slope'] = np.polyfit(l[:idx700], np.log(astar[:idx700]),1)[0]       
-    # for kk in ['jexp','nreal','rho']:
-    #     detIOPs[kk] = info[kk]
-    # detIOPs['psdmax'] = info['dmax']   
+    detIOPs['Tot_slope'] = np.polyfit(l[:idx700], np.log(astar[:idx700]),1)[0]        
     return detIOPs
 
 ##
@@ -390,56 +394,37 @@ def min_iops_case1 (datanap, minIOPs):
     return minIOPs
 
 ##
-def min_iops_case2 (min_frxn, datamin, minIOPs):
+def min_iops_case2 (datanap, minIOPs, cminl):
     l = np.arange(400, 902.5, 2.5)
     idx700 = int(np.where(l==700)[0])
-    for c, f in min_frxn.items():
-        minIOPs[c] = {}
-        sims = datamin[c[:-1]]
-        sim_idx = np.random.choice(list(sims.keys()))
-        info = sims[sim_idx]
-        cminl = minIOPs['Tot_conc'] * f
-        minIOPs[c]['class_frxn'] = f
-        minIOPs[c]['class_conc'] = cminl
-        astar = info['astar'][0]
-        minIOPs[c]['a'] = cminl * astar
-        minIOPs[c]['b'] = cminl * info['bstar'][0]
-        minIOPs[c]['bb'] = cminl * info['bbstar'][0]
-        minIOPs[c]['VSF'] = cminl * info['VSF'][0]
-        minIOPs[c]['class_slope'] = np.polyfit(l[:idx700], np.log(astar[:idx700]),1)[0]
-        for kk in ['j','nreal','rho']:
-            minIOPs[c][kk] = info[kk]
-        minIOPs[c]['psdmax'] = info['dmax']
-
-    # mineral component total iops
-    for p in ['a','b','bb','VSF']:
-        comp_tot_iop = 0 # iops
-        for c in min_frxn.keys():
-            comp_tot_iop = comp_tot_iop + minIOPs[c]['{}'.format(p)]
-            minIOPs['{}_tot'.format(p)] = comp_tot_iop
-            #comp_tot_C = comp_tot_C + minIOPs[c]['class_conc']
-    
-    minIOPs['Tot_slope'] = np.polyfit(l[:idx700], np.log(minIOPs['a_tot'][:idx700]),1)[0]    
+    idx440 = int(np.where(l==440)[0])
+    c = np.random.choice(['SAN1','AUS1','ICE1','KUW1','NIG1','SAH1','OAH1'])
+    sim_idx = np.random.choice(datanap[c]['a'].index)
+    astar = datanap[c]['a'].loc[sim_idx,:].values  
+    minIOPs['Tot_conc'] = cminl
+    minIOPs['a_tot'] = cminl * astar
+    minIOPs['b_tot'] = cminl * datanap[c]['b'].loc[sim_idx,:].values
+    minIOPs['bb_tot'] = cminl * datanap[c]['bb'].loc[sim_idx,:].values    
+    minIOPs['Tot_slope'] = np.polyfit(l[:idx700], np.log(astar[:idx700]),1)[0] 
     return minIOPs
 
 
 ##
-def det_iops_case2 (cdet, datadet, detIOPs):
+def det_iops_case2 (datanap, detIOPs, cdet):
     l = np.arange(400, 902.5, 2.5)
     idx700 = int(np.where(l==700)[0])
-    sim_idx = np.random.choice(list(datadet.keys()))
-    info = datadet[sim_idx]
-    astar = info['astar'][0]
-    # cdet = nap - minl 
+    idx440 = int(np.where(l==440)[0])
+    sim_idx = np.random.choice(datanap['DET']['a'].index)
+    astar = datanap['DET']['a'].loc[sim_idx,:].values
     detIOPs['Tot_conc'] = cdet
     detIOPs['a_tot'] = cdet * astar
-    detIOPs['b_tot'] = cdet * info['bstar'][0]
-    detIOPs['bb_tot'] = cdet * info['bbstar'][0]
-    detIOPs['VSF_tot'] = cdet * info['VSF'][0]
+    detIOPs['b_tot'] = cdet * datanap['DET']['b'].loc[sim_idx,:].values
+    detIOPs['bb_tot'] = cdet * datanap['DET']['bb'].loc[sim_idx,:].values
+    # detIOPs['VSF_tot'] = cdet * info['VSF'][0]
     detIOPs['Tot_slope'] = np.polyfit(l[:idx700], np.log(astar[:idx700]),1)[0]       
-    for kk in ['j','nreal','rho']:
-        detIOPs[kk] = info[kk]
-    detIOPs['psdmax'] = info['dmax']   
+    # for kk in ['j','nreal','rho']:
+    #     detIOPs[kk] = info[kk]
+    # detIOPs['psdmax'] = info['dmax']   
     return detIOPs
 
 
@@ -609,18 +594,33 @@ def dict_to_df (iops):
             continue
     
     # pft data
-    for i, p in classIOPs.items():
-        if i in classes:
-            for ii in tots:
-            # for ii, pp in p.items():
-                if ii in ['class_chl','class_frxn','class_Deff','class_sz_class']:
-                    row.append(p[ii])
-                    col_names.append('{}_{}'.format(i,ii))
-                elif ii in ['a_tot', 'b_tot', 'bb_tot']:
-                    row.append(p[ii])
-                    col_names.append(col_name_append('{}_{}_'.format(i,ii)))
-                else:
-                    continue
+    pftListTot = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
+        'Cyano_blue','Heterokonts','Cyano_red','Rhodophytes','Eustigmatophyte', 'Raphidophyte']
+    for c in classes:
+        p = classIOPs[c]
+        for ii in tots:
+            if ii in ['class_chl','class_frxn','class_Deff','class_sz_class']:
+                row.append(p[ii])
+                col_names.append('{}_{}'.format(c,ii))  
+            elif ii in ['a_tot', 'b_tot', 'bb_tot']:
+                row.append(p[ii])
+                col_names.append(col_name_append('{}_{}_'.format(c,ii)))
+            else:
+                continue
+                
+                
+    # for i, p in classIOPs.items():
+    #     if i in classes:
+    #         for ii in tots:
+    #         # for ii, pp in p.items():
+    #             if ii in ['class_chl','class_frxn','class_Deff','class_sz_class']:
+    #                 row.append(p[ii])
+    #                 col_names.append('{}_{}'.format(i,ii))
+    #             elif ii in ['a_tot', 'b_tot', 'bb_tot']:
+    #                 row.append(p[ii])
+    #                 col_names.append(col_name_append('{}_{}_'.format(i,ii)))
+    #             else:
+    #                 continue
       
     # minerals
     minIOPs = iops['Min']
@@ -693,7 +693,7 @@ def dict_to_df (iops):
             b = k['spec'].values
             row.append(a)
             row.append(b)
-            col_names.append('benthic_{}_cfx'.format(i))
+            col_names.append('benthic_{}_gfx'.format(i))
             col_names.append(col_name_append('benthic_{}_'.format(i)))
         
     # adjacency
