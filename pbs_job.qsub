@@ -1,0 +1,38 @@
+#PBS -S /bin/bash
+#PBS -l select=2:ncpus=10:model=san
+#PBS -l walltime=00:08:00
+#PBS -N job-test
+#PBS -j oe
+#PBS -q devel
+#PBS -o /nobackup/jakravit/data/HE60/run/job-test.log
+
+
+# Should likely match the above ncpus. This param is tasks per node, e.g. 2 selects * 10 NCPUS = 20 parallel's tasks running simultaneously
+NCPUS=10
+
+# Working directory 
+WDIR=/nobackup/jakravit/data/HE60/run/
+cd $WDIR
+
+# The work, one line in the text file is one gnu parallel's task
+SET=case2V1_parallel_runlist.txt
+
+# The executable, which is mapped to one line (sets.txt) per task
+EXEC=./runner.py
+
+# A modern version of gnu parallels. Assume MODULEPATH has /nex/modules/files
+module load parallel/20210722_nex
+module load pythongeo/3.9.9_toss_nex
+
+# Get the unique node names from pbs 
+PARA_NDS=$(mktemp /tmp/pbs-node-uniq.XXXXXXXXXX) 
+cat $PBS_NODEFILE | sort | uniq > $PARA_NDS
+
+# This is so you don't have to run "module load" with parallels each invocation. You may want to check all the env's are in this line.
+export PARALLEL="--env PATH --env LD_LIBRARY_PATH --env LOADEDMODULES --env _LMFILES_ --env MODULE_VERSION --env MODULEPATH --env MODULEVERSION_STACK --env MODULESHOME  --env PYTHONPATH"
+
+# Run
+parallel -a $SET -j $NCPUS -u  --sshloginfile $PARA_NDS --workdir $WDIR --colsep ' ' "$EXEC {1} {2}" 
+
+# clean the temp node file
+rm $PARA_NDS

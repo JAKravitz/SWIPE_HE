@@ -12,6 +12,7 @@ def iroot(l, iops, batch_name, uid, rootPath, br=False):
     runPath = rootPath + 'HE60/run/'
     batchPath = runPath + 'batch/'
     runlist_title = batch_name + '_runlist.txt'
+    parallel_title = batch_name + '_parallel_runlist.txt'
     batchlist_title = 'batchruns.sh'
 
     # solar zenith
@@ -159,10 +160,22 @@ def iroot(l, iops, batch_name, uid, rootPath, br=False):
         np.savetxt(f, line80, delimiter=',', fmt='%d')
         np.savetxt(f, line81, delimiter=',', fmt=fmtD)
         f.writelines(line82_93)
-
-        # WRITE FILE TO RUNLIST.TXT FOR HE5 BATCH PROCESSING
-        with io.open(runPath + runlist_title, 'a+') as r:
-            r.write(str(fname) + '\r\n')
+        
+        if br == False:
+        
+            # WRITE FILE TO RUNLIST.TXT FOR HE5 BATCH PROCESSING
+            with io.open(runPath + runlist_title, 'a+') as r:
+                r.write(str(fname) + '\r\n')
+            
+            uidBR = uid + '_BR'
+            fnameBR = 'I_' + batch_name +'_' + uidBR + '.txt'
+            with io.open(runPath + parallel_title, 'a+') as r:
+                r.write(str(fname) + ' ' + str(fnameBR) + '\r\n')
+            
+        else:
+            
+            with io.open(runPath + runlist_title, 'a+') as r:
+                r.write(str(fname) + '\r\n')
             
         # # WRITE FILE TO batchlist.sh FOR HE5 BATCH PROCESSING
         # with io.open(runPath + batchlist_title, 'a+') as fp:

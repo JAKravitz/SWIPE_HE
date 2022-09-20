@@ -36,7 +36,7 @@ def build_Case2(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     
     # assign class contributions
     alphas = [1, 5, 10, 20]
-    phyto_class_frxn, maxpft = dirichlet_phyto(alphas)
+    phyto_class_frxn, maxpft = dirichlet_phyto(alphas, case2=True)
 
     # define species for each class first
     frxns = np.linspace(.05, .95, 50)

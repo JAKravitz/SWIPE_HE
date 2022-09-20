@@ -32,17 +32,30 @@ def lognorm_random(sigma,scale,num):
     return s
 
 ##
-def dirichlet_phyto (alphas):
+def dirichlet_phyto (alphas, case2=False):
     pftListTot = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
             'Cyano_blue','Heterokonts','Cyano_red','Rhodophytes','Eustigmatophyte', 'Raphidophyte']
     pftList = random.sample(pftListTot, 9)
     dist = np.random.choice(alphas)
     distributions = np.random.dirichlet(np.ones(9) / dist, size=1)[0]
-    # dmax = distributions.max()
-    dx = np.argmax(distributions)
-    phyto_class_frxn = {}
-    for i, phyto in enumerate(pftList):
-        phyto_class_frxn[phyto] = {'cfrxn': distributions[i], 'sps':[], 'fx':[]}
+    if case2:
+        if 'Cyano_red' in pftList:
+            dmin = distributions.min()
+            dx = np.argmin(distributions)
+    
+            phyto_class_frxn = {}
+            phyto_class_frxn['Cyano_red'] = {'cfrxn': distributions[dx], 'sps':[], 'fx':[]}
+            newDist = np.delete(distributions, dx)
+            for i, phyto in enumerate(pftList):
+                if phyto == 'Cyano_red':
+                    continue
+                else:    
+                    phyto_class_frxn[phyto] = {'cfrxn': distributions[i], 'sps':[], 'fx':[]}
+    else:
+        phyto_class_frxn = {}
+        for i, phyto in enumerate(pftList):
+            phyto_class_frxn[phyto] = {'cfrxn': distributions[i], 'sps':[], 'fx':[]}        
+    
     out = list(set(pftListTot) - set(pftList))
     for p in out:
         phyto_class_frxn[p] = {'cfrxn': 0, 'sps':[], 'fx':[]}
@@ -727,21 +740,21 @@ def dict_to_df (iops):
     row.append(fl_data['FQY'])
     row.append(fl_data['aphyEuk'])
     row.append(fl_data['aphyCy'])
-    row.append('nan')
+    # row.append('nan')
     col_names.append(['FQY'])
     col_names.append(col_name_append('aphyEuk_'))
     col_names.append(col_name_append('aphyCy_'))
-    col_names.append('Fl685_amp')
+    # col_names.append('Fl685_amp')
     
     # bottom refl
-    row.append(0)
-    col_names.append(['Br_included'])
+    # row.append(0)
+    # col_names.append(['Br_included'])
     
     # sunglint
-    row.append(0)
-    row.append(0)
-    col_names.append(['Sg_included'])
-    col_names.append(['Sg_amplitude'])
+    # row.append(0)
+    # row.append(0)
+    # col_names.append(['Sg_included'])
+    # col_names.append(['Sg_amplitude'])
     
     # finalize
     col_names_final = np.hstack(col_names)
@@ -749,11 +762,11 @@ def dict_to_df (iops):
     
     # duplicate for sunglint and bottom refl addition
     row2 = row_final.copy()
-    row2[-2:] = [1,'nan'] # sg included, nan as placeholder for sg amplitude
+    # row2[-2:] = [1,'nan'] # sg included, nan as placeholder for sg amplitude
     row3 = row_final.copy()
-    row3[-3] = 1 # Br included
+    # row3[-3] = 1 # Br included
     row4 = row_final.copy()
-    row4[-3:] = [1,1,'nan'] # Sg and Br included
+    # row4[-3:] = [1,1,'nan'] # Sg and Br included
     
     row5 = np.vstack((row_final,row2,row3,row4))
     
