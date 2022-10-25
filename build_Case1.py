@@ -176,26 +176,13 @@ def build_Case1(phy_library, datanap, benthic_lib, adj_lib, aero_lib):
     # Distance to landline
     iops['Adjacency']['dist'] = np.round(dist,2)
     
-    #################### ATMOSPHERE ################################################
+    #################### GEOMETRIES ################################################
     #%  
-    atm =  {'aero': aero_lib.sample(),
-            'atm_prof': np.random.choice(['afglt','afglms','afglmw','afglss','afglsw',
-                                         'afglus']),
-            'aero_prof': np.random.choice(['antarctic', 'continental_average',
-                                          'continental_clean', 'continental_polluted',
-                                          'desert',
-                                          'maritime_clean', 'maritime_polluted',
-                                          'maritime_tropical', 'urban']),
-            'OZA': np.random.choice(range(10,55,5)),
-            'OAA': np.random.choice(range(60,120,5)),
-            'SZA': np.random.choice(range(5,70,5)),
-            'SAA': np.random.choice(range(30,160,10)),
-            'wind': np.random.choice(np.linspace(0,14,29))
-           }
+    geo = {'SZA': np.random.choice(range(5,70,5)),
+           'SAA': np.random.choice(range(30,160,10)),
+           'Wind': np.random.choice(np.arange(0,15,.2))}
     
-    # add altitude, water vapor, ozone, wind (for sunglint) !!!!!
-    
-    iops['Atm'] = atm
+    iops['Geo'] = geo
     
     
     ############### ARD FORMAT #######################################################

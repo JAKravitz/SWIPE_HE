@@ -15,11 +15,11 @@ def iroot(l, iops, batch_name, uid, rootPath, br=False):
     batchlist_title = 'batchruns.sh'
 
     # solar zenith
-    sza = iops['Atm']['SZA']
-    saa = iops['Atm']['SAA']
+    sza = iops['Geo']['SZA']
+    saa = iops['Geo']['SAA']
     
     # wind speed (m/s)
-    ws = iops['Atm']['wind']
+    ws = iops['Geo']['Wind']
 
     ''' --------- BEGIN WRITE NEW IROOT FILE --------- '''
 

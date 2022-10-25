@@ -33,10 +33,10 @@ def lognorm_random(sigma,scale,num):
 
 ##
 def dirichlet_phyto (alphas, case1=True):
-    if case1 = True:
+    if case1:
         pftListTot = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
                 'Cyano_blue','Heterokonts','Cyano_red','Rhodophytes','Eustigmatophyte', 'Raphidophyte']
-    elif case1 = False:
+    else:
         pftListTot = ['Haptophytes','Diatoms','Dinoflagellates','Cryptophytes','Green_algae',
                 'Cyano_blue','Heterokonts','Rhodophytes','Eustigmatophyte', 'Raphidophyte'] 
         
@@ -45,7 +45,7 @@ def dirichlet_phyto (alphas, case1=True):
     distributions = np.random.dirichlet(np.ones(9) / dist, size=1)[0]
     dmax = np.argmax(distributions)
     # dmin = np.argmin(distributsions)
-    maxpft = pftList[dx]
+    maxpft = pftList[dmax]
     phyto_class_frxn = {}
     for i, phyto in enumerate(pftList):
         phyto_class_frxn[phyto] = {'cfrxn': distributions[i], 'sps':[], 'fx':[]}
@@ -157,15 +157,15 @@ def dirichlet_adj (alphas,groups,adj_lib):
 
 ##
 def define_case2_chlDist (phyto_class_frxn, maxpft, case):
-    if case == 'case2':
+#     if case == 'case2':
     
-    elif case == 'bloom':
+#     elif case == 'bloom':
     
-    elif case == 'cyano':
+#     elif case == 'cyano':
     
-    elif case == 'cdom':
+#     elif case == 'cdom':
     
-    elif case == 'nap':
+#     elif case == 'nap':
     
     
     
@@ -726,17 +726,6 @@ def dict_to_df (iops):
             d = k['gfx']
             row.append(d)
             col_names.append('adj_{}_gfx'.format(i))
-
-    # atmosphere
-    atm = iops['Atm']
-    row.append(atm['aero'].iloc[0,3:].values)
-    col_names.append(atm['aero'].add_prefix('atm_').iloc[0,3:].index.values)
-    row.append(atm['atm_prof'])
-    row.append(atm['OZA'])
-    row.append(atm['OAA'])
-    row.append(atm['SZA'])
-    row.append(atm['SAA'])
-    col_names.append(['prof','OZA','OAA','SZA','SAA'])
     
     # fluorescence 
     fl_data = classIOPs['fluorescence']
@@ -748,6 +737,18 @@ def dict_to_df (iops):
     col_names.append(col_name_append('aphyEuk_'))
     col_names.append(col_name_append('aphyCy_'))
     col_names.append('Fl685_amp')
+    
+    # geometries
+    geo = iops['Geo']
+    # row.append(atm['aero'].iloc[0,3:].values)
+    # col_names.append(atm['aero'].add_prefix('atm_').iloc[0,3:].index.values)
+    # row.append(atm['atm_prof'])
+    # row.append(atm['OZA'])
+    # row.append(atm['OAA'])
+    row.append(geo['SZA'])
+    row.append(geo['SAA'])
+    # col_names.append(['prof','OZA','OAA','SZA','SAA'])
+    col_names.append(['SZA','SAA'])
     
     # bottom refl
     row.append(0)

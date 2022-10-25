@@ -1,0 +1,84 @@
+{
+  "MODTRAN": [
+    {
+      "MODTRANINPUT": {
+        "NAME": "TEST01",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_SOLAR_AND_THERMAL",
+          "IMULT": "RT_DISORT",
+          "DISALB": true,
+          "NSTR": 8,
+          "SOLCON": 0.0
+        },
+        "ATMOSPHERE": {
+          "CO2MX": 390.0,
+          "H2OSTR": 1.8,
+          "H2OUNIT": "g",
+          "O3STR": 0.29,
+          "O3UNIT": "a",
+          "AERRH": 30.0
+        },
+        "AEROSOLS": {
+          "CDASTM": "B",
+          "ASTMX": 0.704,
+          "IHAZE": "AER_RURAL",
+          "ARUSS": "USS",
+          "VIS": -0.2,
+          "IPH": 0,
+          "IREGSPC": [
+            {
+              "IREG": 1,
+              "NARSPC": 7,
+              "AWCCON": 0.0,
+              "AERNAM": "",
+              "VARSPC": [ 440.0, 675.0, 870.0, 1020.0, 0.0, 0.0, 0.0],
+              "EXTC": [ 0.235, 0.142, 0.101, 0.087, 0.0, 0.0, 0.0],
+              "ABSC": [ 0.0175, 0.00971, 0.00815, 0.00728, 0.0, 0.0, 0.0],
+              "ASYM": [ 0.7041, 0.6523, 0.6371, 0.6353, 0.0, 0.0, 0.0]
+            }
+          ]
+        },
+        "GEOMETRY": {
+          "ITYPE": 3,
+          "H1ALT": 18.0,
+          "H2ALT": 1.2001,
+          "OBSZEN": 150.0,
+          "IPARM": 12,
+          "PARM1": 325.0,
+          "PARM2": 30.0
+        },
+        "SURFACE": {
+          "SURFTYPE": "REFL_LAMBER_MODEL",
+          "GNDALT": 1.2,
+          "NSURF": 2,
+          "SURFP": {
+            "CSALB": "LAMB_OCEAN_WATER"
+          },
+          "SURFA": {
+            "CSALB": "LAMB_OCEAN_WATER"
+          }
+        },
+        "SPECTRAL": {
+          "V1": 390.0,
+          "V2": 962.0,
+          "DV": 0.05,
+          "FWHM": 0.1,
+          "YFLAG": "R",
+          "XFLAG": "N",
+          "FLAGS": "NTAA  T",
+          "MLFLX": 1
+        },
+        "FILEOPTIONS": {
+          "JSONOPT": "WRT_OUTPUT",
+          "CSVPRNT": "TEST01.csv",
+          "JSONPRNT": "TEST01_.json"
+        }
+      }
+    }
+  ]
+}

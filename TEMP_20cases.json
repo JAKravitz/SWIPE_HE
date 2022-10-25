@@ -1,0 +1,624 @@
+{
+  "MODTRAN": [
+    {
+      "MODTRANINPUT": {
+        "NAME": "temp_20cases",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    },
+    {
+      "MODTRANINPUT": {
+        "NAME": "mod6",
+        "DESCRIPTION": "",
+        "CASE": 0,
+        "RTOPTIONS": {
+          "MODTRN": "RT_MODTRAN",
+          "LYMOLC": false,
+          "T_BEST": false,
+          "IEMSCT": "RT_TRANSMITTANCE",
+          "IMULT": "RT_NO_MULTIPLE_SCATTER"
+        },
+        "ATMOSPHERE": {},
+        "AEROSOLS": {
+          "IHAZE": "AER_RURAL",
+          "VIS": 0.0
+        },
+        "GEOMETRY": {},
+        "SURFACE": {
+          "SURFTYPE": "REFL_CONSTANT",
+          "NSURF": 1
+        },
+        "SPECTRAL": {
+          "V1": 800.0,
+          "V2": 1250.0,
+          "DV": 1.0,
+          "FWHM": 2.0
+        },
+        "FILEOPTIONS": {}
+      }
+    }
+  ]
+}
